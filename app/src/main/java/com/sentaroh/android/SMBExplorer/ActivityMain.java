@@ -39,6 +39,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.os.StatFs;
 import android.os.storage.StorageManager;
 import android.provider.Settings;
 import android.view.KeyEvent;
@@ -76,6 +77,7 @@ import com.sentaroh.android.Utilities3.Widget.CustomTabContentView;
 import com.sentaroh.android.Utilities3.Widget.CustomViewPager;
 import com.sentaroh.android.Utilities3.Widget.CustomViewPagerAdapter;
 
+import java.io.BufferedOutputStream;
 import java.io.Externalizable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -145,6 +147,8 @@ public class ActivityMain extends AppCompatActivity {
 
 		mContext=ActivityMain.this.getApplicationContext();
 		mActivity=ActivityMain.this;
+        makeCacheDirectory();
+
         mGp=GlobalWorkArea.getGlobalParameters(mContext);
 
         mUtil=mGp.mUtil=new CommonUtilities(mActivity, "Main", mGp);
@@ -1407,6 +1411,20 @@ public class ActivityMain extends AppCompatActivity {
             mUtil.addDebugMsg(1, "I", "Task data was restored");
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void makeCacheDirectory() {
+        String packageName = mContext.getPackageName();
+        File[] stg_array=mContext.getExternalFilesDirs(null);
+        for(File item:stg_array) {
+            if (item!=null) {
+                File cd=new File(item.getParentFile()+"/cache");
+                if (!cd.exists()) {
+                    boolean rc=cd.mkdirs();
+//                mUtil.addDebugMsg(1, "I", "makeChachDirectory directory create result="+rc);
+                }
+            }
         }
     }
 
