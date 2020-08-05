@@ -121,7 +121,7 @@ public class SmbServerUtil {
                 }
             } else {
                 priv_key= KeyStoreUtility.getGeneratedPassword(gp.context, SMBEXPLORER_KEY_STORE_ALIAS);
-                cp_int= EncryptUtilV3.initDecryptEnv(priv_key);
+                cp_int= EncryptUtilV3.initCipherEnv(priv_key);
                 fis = gp.context.openFileInput(SMBEXPLORER_PROFILE_NAME);
             }
             if (!init_smb_list) {
@@ -241,7 +241,7 @@ public class SmbServerUtil {
                 profile_out=lf.getOutputStream();
             } else {
                 priv_key= KeyStoreUtility.getGeneratedPassword(gp.context, SMBEXPLORER_KEY_STORE_ALIAS);
-                cp_int= EncryptUtilV3.initDecryptEnv(priv_key);
+                cp_int= EncryptUtilV3.initCipherEnv(priv_key);
 
                 profile_out=gp.context.openFileOutput(SMBEXPLORER_PROFILE_NAME, MODE_PRIVATE);
             }
