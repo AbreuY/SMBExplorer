@@ -104,7 +104,6 @@ import static com.sentaroh.android.SMBExplorer.Constants.SMBEXPLORER_TAB_LOCAL;
 import static com.sentaroh.android.SMBExplorer.Constants.SMBEXPLORER_TAB_POS_LOCAL;
 import static com.sentaroh.android.SMBExplorer.Constants.SMBEXPLORER_TAB_REMOTE;
 import static com.sentaroh.android.Utilities3.SafFile3.SAF_FILE_PRIMARY_UUID;
-import static com.sentaroh.android.Utilities3.SafManager3.SCOPED_STORAGE_SDK;
 
 public class ActivityMain extends AppCompatActivity {
 	private final static String DEBUG_TAG = "SMBExplorer";
@@ -756,7 +755,7 @@ public class ActivityMain extends AppCompatActivity {
             boolean granted= isAllFileAccessPermissionGranted();
             return granted;
         } else {
-            if (Build.VERSION.SDK_INT<23 || Build.VERSION.SDK_INT>=SCOPED_STORAGE_SDK) return true;
+            if (Build.VERSION.SDK_INT<23) return true;
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) return true;
             else return false;
         }
@@ -765,7 +764,7 @@ public class ActivityMain extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 1;
     private boolean mLegacyStoragePermissionInprocess=false;
     private void checkRequiredPermissions() {
-        if (Build.VERSION.SDK_INT>=SCOPED_STORAGE_SDK || mLegacyStoragePermissionInprocess) return;
+        if (mLegacyStoragePermissionInprocess) return;
         if (CommonUtilities.isAndroidVersion30orUp()) {
             requestAllFileAccessPermission();
             return;
@@ -1113,23 +1112,17 @@ public class ActivityMain extends AppCompatActivity {
         for(SafManager3.StorageVolumeInfo svi:vol_list) {
             if (svi.uuid.equals(uuid)) {
                 if (Build.VERSION.SDK_INT>=24) {
-                    if (Build.VERSION.SDK_INT>=SCOPED_STORAGE_SDK) {
-                        intent=svi.volume.createOpenDocumentTreeIntent();
-                        startActivityForResult(intent, REQUEST_CODE_STORAGE_ACCESS);
-                        break;
+                    if (Build.VERSION.SDK_INT>=29) {
+                        if (!svi.uuid.equals(SAF_FILE_PRIMARY_UUID)) {
+                            intent=svi.volume.createOpenDocumentTreeIntent();
+                            startActivityForResult(intent, REQUEST_CODE_STORAGE_ACCESS);
+                            break;
+                        }
                     } else {
-                        if (Build.VERSION.SDK_INT>=29) {
-                            if (!svi.uuid.equals(SAF_FILE_PRIMARY_UUID)) {
-                                intent=svi.volume.createOpenDocumentTreeIntent();
-                                startActivityForResult(intent, REQUEST_CODE_STORAGE_ACCESS);
-                                break;
-                            }
-                        } else {
-                            if (!svi.uuid.equals(SAF_FILE_PRIMARY_UUID)) {
-                                intent=svi.volume.createAccessIntent(null);
-                                startActivityForResult(intent, REQUEST_CODE_STORAGE_ACCESS);
-                                break;
-                            }
+                        if (!svi.uuid.equals(SAF_FILE_PRIMARY_UUID)) {
+                            intent=svi.volume.createAccessIntent(null);
+                            startActivityForResult(intent, REQUEST_CODE_STORAGE_ACCESS);
+                            break;
                         }
                     }
                 } else {

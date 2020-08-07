@@ -40,8 +40,6 @@ import com.sentaroh.android.Utilities3.SafManager3;
 
 import java.util.ArrayList;
 
-import static com.sentaroh.android.Utilities3.SafManager3.SCOPED_STORAGE_SDK;
-
 public class StoragePermission {
 
     private Context mContext=null;
@@ -73,7 +71,7 @@ public class StoragePermission {
         for(SafManager3.StorageVolumeInfo ssi:svi_list) {
             if (!mGp.safMgr.isUuidRegistered(ssi.uuid)) {
                 if (ssi.uuid.equals(SafManager3.SAF_FILE_PRIMARY_UUID)) {
-                    if (Build.VERSION.SDK_INT>=SCOPED_STORAGE_SDK) rows.add(ssi.description);
+                    //NOP
                 } else {
                     rows.add(ssi.description);
                 }

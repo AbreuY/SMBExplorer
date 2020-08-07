@@ -95,7 +95,6 @@ import static com.sentaroh.android.SMBExplorer.Constants.SMBEXPLORER_TAB_LOCAL;
 import static com.sentaroh.android.SMBExplorer.Constants.SMBEXPLORER_TAB_POS_LOCAL;
 import static com.sentaroh.android.SMBExplorer.Constants.SMBEXPLORER_TAB_POS_REMOTE;
 import static com.sentaroh.android.SMBExplorer.Constants.SMBEXPLORER_TAB_REMOTE;
-import static com.sentaroh.android.Utilities3.SafManager3.SCOPED_STORAGE_SDK;
 
 public class FileManager {
     private static Logger log= LoggerFactory.getLogger(FileManager.class);
@@ -500,11 +499,11 @@ public class FileManager {
         if (adapter.getCount()>sel_no) mGp.localFileListDirSpinner.setSelection(sel_no);
         else mGp.localFileListDirSpinner.setSelection(0);
 
-        if (mGp.localStorageList.size()==0) {
-            if (Build.VERSION.SDK_INT>=SCOPED_STORAGE_SDK) {
-                mActivity.requestStoragePermissions();
-            }
-        }
+//        if (mGp.localStorageList.size()==0) {
+//            if (Build.VERSION.SDK_INT>=SCOPED_STORAGE_SDK) {
+//                mActivity.requestStoragePermissions();
+//            }
+//        }
 
         mGp.localFileListDirSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -1631,20 +1630,11 @@ public class FileManager {
                                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 Uri uri=null;
                                 SafFile3 dl=new SafFile3(mContext, mGp.internalRootDirectory+"/Download/"+item.getName());
-                                if (Build.VERSION.SDK_INT>=SCOPED_STORAGE_SDK) {
-                                    if (dl.isSafFile()) {
-                                        uri=dl.getUri();
-                                    } else {
-                                        uri= FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID+".provider",
-                                                new File(mGp.internalRootDirectory+"/Download/"+item.getName()));
-                                    }
+                                if (Build.VERSION.SDK_INT>=24) {
+                                    uri= FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID+".provider",
+                                            new File(mGp.internalRootDirectory+"/Download/"+item.getName()));
                                 } else {
-                                    if (Build.VERSION.SDK_INT>=24) {
-                                        uri= FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID+".provider",
-                                                new File(mGp.internalRootDirectory+"/Download/"+item.getName()));
-                                    } else {
-                                        uri=Uri.parse("file://"+mGp.internalRootDirectory+"/Download/"+item.getName());
-                                    }
+                                    uri=Uri.parse("file://"+mGp.internalRootDirectory+"/Download/"+item.getName());
                                 }
                                 intent.setDataAndType(uri, mime_type);
                                 mActivity.startActivity(intent);
