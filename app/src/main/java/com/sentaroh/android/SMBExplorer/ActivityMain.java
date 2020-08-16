@@ -979,7 +979,7 @@ public class ActivityMain extends AppCompatActivity {
         });
         mUtil.flushLog();
         LogManagementFragment lfm= LogManagementFragment.newInstance(false, getString(R.string.msgs_log_management_title));
-        lfm.showDialog(getSupportFragmentManager(), lfm, ntfy);
+        lfm.showDialog(mContext, getSupportFragmentManager(), lfm, ntfy);
     };
 
     private void sendMagicPacket(final String target_mac, final String if_network) {
