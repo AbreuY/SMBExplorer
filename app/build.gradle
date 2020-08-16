@@ -79,7 +79,8 @@ android {
 }
 
 dependencies {
-//    implementation project(':Utilities')
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+
     implementation files('libs/jcifs-ng-2.1.0-mod-08.jar')
     implementation files('libs/jcifs-ng-2.1.1-20190202-03.jar')
 //    implementation files('libs/jcifs-ng-2.1.2-20190324-01.jar')
@@ -95,6 +96,4 @@ dependencies {
 //    implementation files('libs/WrapperForSlf4j-1.0.2.jar')
 
     implementation files('libs/Utilities3-1.0.2.aar')
-//    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
 }
